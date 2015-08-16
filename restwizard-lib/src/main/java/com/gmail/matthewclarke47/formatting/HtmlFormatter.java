@@ -66,10 +66,21 @@ public class HtmlFormatter implements DocsFormatter{
             if(!str.equals("\n{\n\t")){
                 str +=",\n\t";
             }
-            str += "\""+ property.getKey() + "\": \"ABC\"";
+            str += "\""+ property.getKey() + "\": " + formatExample(property.getType());
         }
         str += "\n}";
         return str;
 
+    }
+
+    private String formatExample(Class<?> type) {
+
+        if(type.equals(boolean.class)){
+            return "true";
+        }
+        else if(type.equals(int.class)){
+            return "12345";
+        }
+        return "\"ABC\"";
     }
 }

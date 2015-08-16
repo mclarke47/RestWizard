@@ -39,12 +39,26 @@ class PostObject{
     @JsonProperty("otherParam")
     private String otherParam;
 
+    @JsonProperty("isBoolean")
+    private boolean isBoolean;
+
+    @JsonProperty("count")
+    private int count;
+
     public String getThingParam() {
         return thingParam;
     }
 
     public String getOtherParam() {
         return otherParam;
+    }
+
+    public boolean isBoolean() {
+        return isBoolean;
+    }
+
+    public int getCount() {
+        return count;
     }
 }
 
