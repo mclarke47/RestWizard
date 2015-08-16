@@ -4,7 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.gmail.matthewclarke47</groupId>
+
+    <parent>
+        <groupId>com.gmail.matthewclarke47.restwizard</groupId>
+        <artifactId>restwizard</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
     <artifactId>restwizard-test</artifactId>
     <version>1.0-SNAPSHOT</version>
     <properties>
@@ -19,8 +24,8 @@
             <version>${dropwizard.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.gmail.matthewclarke47</groupId>
-            <artifactId>restwizard</artifactId>
+            <groupId>com.gmail.matthewclarke47.restwizard</groupId>
+            <artifactId>restwizard-lib</artifactId>
             <version>${restwizard.version}</version>
         </dependency>
         <dependency>
