@@ -1,4 +1,4 @@
-package com.gmail.matthewclarke47;
+package com.gmail.matthewclarke47.metadata;
 
 public abstract class ParameterMetaData {
     private String key;

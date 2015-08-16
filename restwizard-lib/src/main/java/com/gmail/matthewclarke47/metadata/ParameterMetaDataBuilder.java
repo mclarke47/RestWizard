@@ -1,10 +1,11 @@
-package com.gmail.matthewclarke47;
+package com.gmail.matthewclarke47.metadata;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.Parameter;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +14,7 @@ import java.util.function.Supplier;
 public class ParameterMetaDataBuilder {
 
     private Parameter parameter;
+    private Field field;
     private String key;
     private Class<?> type;
 
@@ -20,6 +22,10 @@ public class ParameterMetaDataBuilder {
 
     private ParameterMetaDataBuilder(Parameter parameter){
         this.parameter = parameter;
+    }
+
+    private ParameterMetaDataBuilder(Field field){
+        this.field = field;
     }
 
     public ParameterMetaDataBuilder key(String key) {
@@ -36,6 +42,10 @@ public class ParameterMetaDataBuilder {
         return new ParameterMetaDataBuilder(parameter);
     }
 
+    public static ParameterMetaDataBuilder getBuilder(Field field){
+        return new ParameterMetaDataBuilder(field);
+    }
+
     public ParameterMetaData build() {
 
         annotationToMetaDataSubclass.put(JsonProperty.class, () -> new PropertyParameterMetaData(key, type));
@@ -43,8 +53,15 @@ public class ParameterMetaDataBuilder {
         annotationToMetaDataSubclass.put(PathParam.class, () -> new PathPropertyMetaData(key, type));
 
         for(Class<? extends Annotation> clazz : annotationToMetaDataSubclass.keySet()){
-            if(parameter.isAnnotationPresent(clazz)){
-                return annotationToMetaDataSubclass.get(clazz).get();
+            if(parameter != null){
+                if(parameter.isAnnotationPresent(clazz)){
+                    return annotationToMetaDataSubclass.get(clazz).get();
+                }
+            }
+            if(field != null){
+                if(field.isAnnotationPresent(clazz)){
+                    return annotationToMetaDataSubclass.get(clazz).get();
+                }
             }
         }
         return null;

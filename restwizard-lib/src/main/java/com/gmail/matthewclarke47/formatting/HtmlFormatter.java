@@ -1,24 +1,20 @@
 package com.gmail.matthewclarke47.formatting;
 
-import com.gmail.matthewclarke47.ParameterMetaData;
-import com.gmail.matthewclarke47.ResourceMetaData;
+import com.gmail.matthewclarke47.metadata.MethodMetaData;
+import com.gmail.matthewclarke47.metadata.ParameterMetaData;
+import com.gmail.matthewclarke47.metadata.ResourceMetaData;
 
 import java.io.FileWriter;
 import java.util.List;
 
 public class HtmlFormatter implements DocsFormatter{
     @Override
-    public void print(ResourceMetaData resourceMetaData) {
+    public void print(List<ResourceMetaData> resourceMetaData) {
         String str = "<html><head></head><body>";
-        str += "<h1>";
-        str += resourceMetaData.getPath() + resourceMetaData.getMethodMetaDataList().get(0).getPathSuffix();
-        str += "</h1>";
-        str += "<h2>";
-        str += resourceMetaData.getMethodMetaDataList().get(0).getHttpMethod();
-        str += "</h2>";
-        str += "<h3>";
-        str += formatJson(resourceMetaData.getMethodMetaDataList().get(0).getParameterMetaData());
-        str += "</h3>";
+
+        for(ResourceMetaData rmd : resourceMetaData){
+            str += resourceToHtml(rmd);
+        }
 
         str += "</body></html>";
 
@@ -30,23 +26,47 @@ public class HtmlFormatter implements DocsFormatter{
             fileWriter.flush();
             fileWriter.close();
         } catch (Exception e) {
+            //Ignore for now
         }
 
     }
 
-    private String formatJson(List<ParameterMetaData> propertyStringParams){
+    private String resourceToHtml(ResourceMetaData resourceMetaData) {
+        String str = "<hr>";
 
-        if(propertyStringParams.isEmpty()){
+        for (MethodMetaData metaData : resourceMetaData.getMethodMetaDataList())
+            str += methodToHtml(resourceMetaData, metaData);
+
+        return str;
+    }
+
+    private String methodToHtml(ResourceMetaData resourceMetaData, MethodMetaData metaData) {
+        String str = "";
+        str += "<h1>";
+        str += resourceMetaData.getPath() + metaData.getPathSuffix();
+        str += "</h1>";
+        str += "<h2>";
+        str += metaData.getHttpMethod();
+        str += "</h2>";
+        str += "<h3>";
+        str += formatJson(metaData);
+        str += "</h3>";
+        return str;
+    }
+
+    private String formatJson(MethodMetaData methodParams){
+
+        if(methodParams.getParameterMetaData().isEmpty()){
             return "";
         }
 
         String str = "\n{\n\t";
 
-        for(ParameterMetaData queryStringParam : propertyStringParams){
+        for(ParameterMetaData property : methodParams.getParameterMetaData()){
             if(!str.equals("\n{\n\t")){
                 str +=",\n\t";
             }
-            str += "\""+ queryStringParam.getKey() + "\": \"ABC\"";
+            str += "\""+ property.getKey() + "\": \"ABC\"";
         }
         str += "\n}";
         return str;

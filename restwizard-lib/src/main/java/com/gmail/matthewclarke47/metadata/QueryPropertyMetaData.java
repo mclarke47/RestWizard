@@ -1,4 +1,4 @@
-package com.gmail.matthewclarke47;
+package com.gmail.matthewclarke47.metadata;
 
 /**
  * Created by matthew on 13/08/2015.

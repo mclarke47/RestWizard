@@ -1,5 +1,9 @@
 package com.gmail.matthewclarke47;
 
+import com.gmail.matthewclarke47.metadata.MethodMetaData;
+import com.gmail.matthewclarke47.metadata.ParameterMetaData;
+import com.gmail.matthewclarke47.metadata.PropertyParameterMetaData;
+import com.gmail.matthewclarke47.metadata.ResourceMetaData;
 import org.junit.Test;
 
 import java.util.Optional;

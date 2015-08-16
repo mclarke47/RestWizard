@@ -1,9 +1,9 @@
-package com.gmail.matthewclarke47;
+package com.gmail.matthewclarke47.metadata;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class MethodPrinter {
+class MethodPrinter {
 
     private MethodMetaData methodMetaData;
 

@@ -1,8 +1,10 @@
 package com.gmail.matthewclarke47.formatting;
 
-import com.gmail.matthewclarke47.ResourceMetaData;
+import com.gmail.matthewclarke47.metadata.ResourceMetaData;
+
+import java.util.List;
 
 public interface DocsFormatter {
 
-    void print(ResourceMetaData resourceMetaData);
+    void print(List<ResourceMetaData> resourceMetaData);
 }

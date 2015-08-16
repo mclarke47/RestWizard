@@ -31,12 +31,35 @@ public class TestRestWizard extends Application<HelloWorldConfiguration> {
     }
 }
 
+class PostObject{
+
+    @JsonProperty("thisThing")
+    private String thingParam;
+
+    @JsonProperty("otherParam")
+    private String otherParam;
+
+    public String getThingParam() {
+        return thingParam;
+    }
+
+    public String getOtherParam() {
+        return otherParam;
+    }
+}
+
 @Path("path/")
 class PostResource {
 
     @POST()
     @Path("some/endpoint")
     public Response postMethod(@QueryParam("id") String id){
+        return Response.ok().build();
+    }
+
+    @POST()
+    @Path("some/endpoint/postObject")
+    public Response postMethod(PostObject postObject){
         return Response.ok().build();
     }
 }
@@ -46,7 +69,7 @@ class GetResource {
 
     @GET()
     @Path("some/endpoint")
-    public Response postMethod(@JsonProperty("thisThing") String thingParam){
+    public Response postMethod(){
         return Response.ok().build();
     }
 }

@@ -1,11 +1,14 @@
 package com.gmail.matthewclarke47;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.gmail.matthewclarke47.metadata.MethodMetaData;
+import com.gmail.matthewclarke47.metadata.ParameterMetaData;
+import com.gmail.matthewclarke47.metadata.ParameterMetaDataBuilder;
+import com.gmail.matthewclarke47.metadata.ResourceMetaData;
 
 import javax.ws.rs.*;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
+import java.lang.reflect.*;
 import java.util.*;
 import java.util.function.Function;
 
@@ -16,7 +19,7 @@ class ResourceParser {
 
     private static final Map<Class<? extends Annotation>, String> METHOD_TO_TEXT_MAP = new HashMap<>();
 
-    public static final Map<Class<? extends Annotation>, Function<Parameter, String>> INTERESTING_ANNOTATIONS =
+    public static final Map<Class<? extends Annotation>, Function<AnnotatedElement, String>> INTERESTING_ANNOTATIONS =
             new HashMap<>();
 
     static {
@@ -78,9 +81,46 @@ class ResourceParser {
 
                 parameterMetaData.add(ParameterMetaDataBuilder.getBuilder(param).key(key).type(type).build());
             }
+            if(parameterHasDtoObject(param)){
+
+                Class<?> paramType = param.getType();
+
+                for(Field field : paramType.getDeclaredFields()){
+                    if(fieldHasJsonProperty(field)){
+                        String key = getAnnotationValueFromField(field);
+                        Class<?> type = field.getType();
+
+                        parameterMetaData.add(ParameterMetaDataBuilder.getBuilder(field).key(key).type(type).build());
+                    }
+                }
+            }
         }
 
         return parameterMetaData;
+    }
+
+    private String getAnnotationValueFromField(Field field) {
+        for(Class<? extends Annotation> clazz  : INTERESTING_ANNOTATIONS.keySet()){
+            if(field.isAnnotationPresent(clazz)){
+                return INTERESTING_ANNOTATIONS.get(clazz).apply(field);
+            }
+        }
+        //impossible
+        return null;
+    }
+
+    private boolean fieldHasJsonProperty(Field field) {
+
+        return field.isAnnotationPresent(JsonProperty.class);
+    }
+
+    private boolean parameterHasDtoObject(Parameter param) {
+
+        Class<?> paramType = param.getType();
+
+        List<Field> fields = Arrays.asList(paramType.getDeclaredFields());
+
+        return fields.stream().anyMatch(field -> field.isAnnotationPresent(JsonProperty.class));
     }
 
     private String getAnnotationValueFromParameter(Parameter param) {
