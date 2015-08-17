@@ -4,14 +4,11 @@ import com.gmail.matthewclarke47.formatting.DocsFormatter;
 import com.gmail.matthewclarke47.metadata.ResourceMetaData;
 import io.dropwizard.jersey.setup.JerseyEnvironment;
 import io.dropwizard.lifecycle.ServerLifecycleListener;
-import io.dropwizard.setup.Environment;
 import org.eclipse.jetty.server.Server;
 
-import javax.ws.rs.*;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.Response;
-import java.util.*;
-import java.util.function.Function;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class RestWizard implements ServerLifecycleListener {

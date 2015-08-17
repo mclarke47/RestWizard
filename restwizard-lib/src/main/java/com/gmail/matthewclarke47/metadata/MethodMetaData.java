@@ -29,6 +29,7 @@ public class MethodMetaData {
 
         return this.pathSuffix.equals(method.getPathSuffix())
                 && this.httpMethod.equals(method.getHttpMethod())
+                && this.getParameterMetaData().size() == method.getParameterMetaData().size()
                 && deepCheckParamsContains(method.getParameterMetaData());
     }
 
