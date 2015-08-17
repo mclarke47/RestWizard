@@ -43,37 +43,3 @@ public class RestWizard implements ServerLifecycleListener {
     }
 }
 
-@Path("docs")
-class Docs {
-
-    private Environment environment;
-
-    Docs(Environment environment){
-        this.environment = environment;
-    }
-
-
-    @GET()
-    @Path("/docs")
-    public Response get(){
-        return Response.ok().entity(Entity.json(new DocsResult(environment.jersey().getResourceConfig().getEndpointsInfo()))).build();
-    }
-
-    class DocsResult {
-
-        private String endpoints;
-
-        public DocsResult(String endpoints) {
-            this.endpoints = endpoints;
-        }
-
-        public String getEndpoints() {
-            return endpoints;
-        }
-
-        public void setEndpoints(String endpoints) {
-            this.endpoints = endpoints;
-        }
-    }
-}
-

@@ -16,4 +16,20 @@ public abstract class ParameterMetaData {
     public Class<?> getType() {
         return type;
     }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == null || !(obj instanceof ParameterMetaData))
+            return false;
+
+        ParameterMetaData method = (ParameterMetaData)obj;
+
+        return this.key.equals(method.getKey())
+                && this.type.equals(method.getType());
+    }
 }

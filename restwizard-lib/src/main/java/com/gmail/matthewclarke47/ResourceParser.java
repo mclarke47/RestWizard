@@ -28,9 +28,9 @@ class ResourceParser {
         METHOD_TO_TEXT_MAP.put(PUT.class, HttpMethod.PUT);
         METHOD_TO_TEXT_MAP.put(DELETE.class, HttpMethod.DELETE);
 
-        INTERESTING_ANNOTATIONS.put(JsonProperty.class, param -> param.getAnnotation(JsonProperty.class).value());
-        INTERESTING_ANNOTATIONS.put(QueryParam.class, param -> param.getAnnotation(QueryParam.class).value());
-        INTERESTING_ANNOTATIONS.put(PathParam.class, param -> param.getAnnotation(PathParam.class).value());
+        INTERESTING_ANNOTATIONS.put(JsonProperty.class, element -> element.getAnnotation(JsonProperty.class).value());
+        INTERESTING_ANNOTATIONS.put(QueryParam.class, element -> element.getAnnotation(QueryParam.class).value());
+        INTERESTING_ANNOTATIONS.put(PathParam.class, element -> element.getAnnotation(PathParam.class).value());
     }
 
     public ResourceParser(Object obj) {
