@@ -54,25 +54,29 @@ public class ResourceParserTest {
 
         assertThat(resourceMetaData.getPath(), is(simplePost.classPathValue));
 
-        List<MethodMetaData> methodData = resourceMetaData.getMethodMetaDataList();
-
         ParameterMetaData queryParamData = new QueryPropertyMetaData("id", String.class);
 
-        ParameterMetaData thisThing = new PropertyParameterMetaData("thisThing", String.class);
-        ParameterMetaData otherParam = new PropertyParameterMetaData("otherParam", String.class);
-        ParameterMetaData count = new PropertyParameterMetaData("count", int.class);
-        ParameterMetaData isBoolean = new PropertyParameterMetaData("isBoolean", boolean.class);
-
         List<ParameterMetaData> paramList1 = Lists.newArrayList(queryParamData);
-        List<ParameterMetaData> paramList2 = Lists.newArrayList(thisThing, otherParam, count, isBoolean);
 
+        List<ParameterMetaData> paramList2 = Lists.newArrayList(
+        propertyParam("thisThing", String.class),
+        propertyParam("otherParam", String.class),
+        propertyParam("count", int.class),
+        propertyParam("isBoolean", boolean.class));
 
-        MethodMetaData methodMetaData1 = new MethodMetaData("POST", "some/endpoint", paramList1);
-        MethodMetaData methodMetaData2 = new MethodMetaData("POST", "some/endpoint/postObject", paramList2);
-
-        assertThat(methodData, containsInAnyOrder(methodMetaData2, methodMetaData1));
+        assertThat(resourceMetaData.getMethodMetaDataList(),
+                containsInAnyOrder(
+                methodData("POST", "some/endpoint/postObject", paramList2),
+                methodData("POST", "some/endpoint", paramList1)));
     }
 
+    private MethodMetaData methodData(String method, String path, List<ParameterMetaData> list){
+        return new MethodMetaData(method, path, list);
+    }
+
+    private PropertyParameterMetaData propertyParam(String key, Class<?> type){
+        return new PropertyParameterMetaData(key, type);
+    }
 
     private ResourceMetaData assertAndReturnResourceData(Optional<ResourceMetaData> resourceMetaDataOptional){
         assertThat(resourceMetaDataOptional.isPresent(), is(true));
