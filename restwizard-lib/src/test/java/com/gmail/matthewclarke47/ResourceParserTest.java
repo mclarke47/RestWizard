@@ -13,6 +13,8 @@ import static org.hamcrest.core.Is.is;
 
 public class ResourceParserTest {
 
+    //TODO more non-happy path scenarios
+
     @Test
     public void shouldDocumentGetResource(){
 
@@ -22,6 +24,7 @@ public class ResourceParserTest {
 
         assertThat(resourceMetaData.getPath(), is(simpleGet.classPathValue));
 
+        //TODO get rid of this get(0)
         MethodMetaData methodData = resourceMetaData.getMethodMetaDataList().get(0);
 
         assertMethod(methodData, "GET", simpleGet.methodPathValue);
@@ -38,6 +41,7 @@ public class ResourceParserTest {
 
         assertThat(resourceMetaData.getPath(), is(simplePut.classPathValue));
 
+        //TODO get rid of this get(0)
         MethodMetaData methodData = resourceMetaData.getMethodMetaDataList().get(0);
 
         assertMethod(methodData, "PUT", simplePut.methodPathValue);
@@ -48,6 +52,7 @@ public class ResourceParserTest {
     @Test
     public void shouldDocumentPostResource(){
 
+        //TODO simplify this
         PostResource simplePost = new PostResource();
 
         ResourceMetaData resourceMetaData = assertAndReturnResourceData(new ResourceParser(simplePost).getMetaData());
