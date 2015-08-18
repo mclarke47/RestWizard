@@ -3,9 +3,7 @@ package com.gmail.matthewclarke47.parsing;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.gmail.matthewclarke47.WebServiceAnnotations;
 import com.gmail.matthewclarke47.metadata.ParameterMetaData;
-import com.gmail.matthewclarke47.metadata.ParameterMetaDataBuilder;
 
-import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -59,18 +57,12 @@ public class ParametersParser {
 
     private ParameterMetaData fieldToMetaData(Field field) {
 
-        String key = getAnnotationValueFromAnnotatedElement(field);
-        Class<?> type = field.getType();
-
-        return ParameterMetaDataBuilder.getBuilder(field).key(key).type(type).build();
+        return ParameterMetaData.builder(field).build();
     }
 
     private ParameterMetaData parameterToMetaData(Parameter parameter) {
 
-        String key = getAnnotationValueFromAnnotatedElement(parameter);
-        Class<?> type = parameter.getType();
-
-        return ParameterMetaDataBuilder.getBuilder(parameter).key(key).type(type).build();
+        return ParameterMetaData.builder(parameter).build();
     }
 
     private boolean parameterHasInterestingAnnotation(Parameter param) {
@@ -79,17 +71,6 @@ public class ParametersParser {
                 .keySet()
                 .stream()
                 .anyMatch(param::isAnnotationPresent);
-    }
-
-    private String getAnnotationValueFromAnnotatedElement(AnnotatedElement field) {
-
-        return WebServiceAnnotations.INTERESTING_ANNOTATIONS_TO_VALUE.get(
-                WebServiceAnnotations.INTERESTING_ANNOTATIONS_TO_VALUE.keySet()
-                        .stream()
-                        .filter(field::isAnnotationPresent)
-                        .findFirst()
-                        .get())
-                .apply(field);
     }
 
     private boolean fieldHasJsonProperty(Field field) {
