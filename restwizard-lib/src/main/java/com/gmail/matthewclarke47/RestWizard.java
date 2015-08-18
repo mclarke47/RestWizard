@@ -7,8 +7,6 @@ import io.dropwizard.jersey.setup.JerseyEnvironment;
 import io.dropwizard.lifecycle.ServerLifecycleListener;
 import org.eclipse.jetty.server.Server;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -16,28 +14,20 @@ public class RestWizard implements ServerLifecycleListener {
     private JerseyEnvironment jersey;
     private DocsFormatter docsFormatter;
 
-    private List<Optional<ResourceMetaData>> resourceMetaDataList = new ArrayList<>();
-
     public RestWizard(JerseyEnvironment jersey, DocsFormatter docsFormatter) {
         this.jersey = jersey;
         this.docsFormatter = docsFormatter;
     }
 
+    @Override
     public void serverStarted(Server server) {
-        for (Object obj : jersey.getResourceConfig().getSingletons()) {
 
-            ResourceParser resourceParser = new ResourceParser(obj);
-
-            resourceMetaDataList.add(resourceParser.getMetaData());
-        }
-
-        final List<ResourceMetaData> someList = resourceMetaDataList
-                .stream()
+        docsFormatter.print(jersey.getResourceConfig().getSingletons().stream()
+                .map(obj -> new ResourceParser(obj)
+                        .getMetaData())
                 .filter(Optional::isPresent)
                 .<ResourceMetaData>map(Optional::get)
-                .collect(Collectors.toList());
-
-        docsFormatter.print(someList);
+                .collect(Collectors.toList()));
     }
 }
 
