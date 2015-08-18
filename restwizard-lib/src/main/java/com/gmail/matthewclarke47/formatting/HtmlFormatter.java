@@ -7,12 +7,12 @@ import com.gmail.matthewclarke47.metadata.ResourceMetaData;
 import java.io.FileWriter;
 import java.util.List;
 
-public class HtmlFormatter implements DocsFormatter{
+public class HtmlFormatter implements DocsFormatter {
     @Override
     public void print(List<ResourceMetaData> resourceMetaData) {
         String str = "<html><head></head><body>";
 
-        for(ResourceMetaData rmd : resourceMetaData){
+        for (ResourceMetaData rmd : resourceMetaData) {
             str += resourceToHtml(rmd);
         }
 
@@ -54,19 +54,19 @@ public class HtmlFormatter implements DocsFormatter{
         return str;
     }
 
-    private String formatJson(MethodMetaData methodParams){
+    private String formatJson(MethodMetaData methodParams) {
 
-        if(methodParams.getParameterMetaData().isEmpty()){
+        if (methodParams.getParameterMetaData().isEmpty()) {
             return "";
         }
 
         String str = "\n{\n\t";
 
-        for(ParameterMetaData property : methodParams.getParameterMetaData()){
-            if(!str.equals("\n{\n\t")){
-                str +=",\n\t";
+        for (ParameterMetaData property : methodParams.getParameterMetaData()) {
+            if (!str.equals("\n{\n\t")) {
+                str += ",\n\t";
             }
-            str += "\""+ property.getKey() + "\": " + formatExample(property.getType());
+            str += "\"" + property.getKey() + "\": " + formatExample(property.getType());
         }
         str += "\n}";
         return str;
@@ -75,10 +75,9 @@ public class HtmlFormatter implements DocsFormatter{
 
     private String formatExample(Class<?> type) {
 
-        if(type.equals(boolean.class)){
+        if (type.equals(boolean.class)) {
             return "true";
-        }
-        else if(type.equals(int.class)){
+        } else if (type.equals(int.class)) {
             return "12345";
         }
         return "\"ABC\"";

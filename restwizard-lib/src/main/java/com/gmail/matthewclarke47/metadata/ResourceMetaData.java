@@ -25,12 +25,12 @@ public class ResourceMetaData {
 
         String methodDataString = "\t";
 
-        for(MethodMetaData methodMetaData : methodMetaDataList){
-            methodDataString += methodMetaData.toString()+" \n\t";
+        for (MethodMetaData methodMetaData : methodMetaDataList) {
+            methodDataString += methodMetaData.toString() + " \n\t";
         }
 
 
-        return "Path: "+ path + "\nEndpoints: \n" + methodDataString;
+        return "Path: " + path + "\nEndpoints: \n" + methodDataString;
 
     }
 }

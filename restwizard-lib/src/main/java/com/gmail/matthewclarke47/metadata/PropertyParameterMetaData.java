@@ -1,6 +1,6 @@
 package com.gmail.matthewclarke47.metadata;
 
-public class PropertyParameterMetaData extends ParameterMetaData{
+public class PropertyParameterMetaData extends ParameterMetaData {
 
     public PropertyParameterMetaData(String key, Class<?> type) {
         super(key, type);
@@ -8,6 +8,6 @@ public class PropertyParameterMetaData extends ParameterMetaData{
 
     @Override
     public String toString() {
-        return getKey() +": \"ABCXYZ\" " ;
+        return getKey() + ": \"ABCXYZ\" ";
     }
 }

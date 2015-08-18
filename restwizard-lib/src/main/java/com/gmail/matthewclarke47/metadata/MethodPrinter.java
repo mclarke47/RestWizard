@@ -16,35 +16,35 @@ class MethodPrinter {
         return new MethodPrinter(methodMetaData).print();
     }
 
-    private String formatPath(String pathSuffix, List<ParameterMetaData> queryStringParams){
-        if(queryStringParams.isEmpty()){
+    private String formatPath(String pathSuffix, List<ParameterMetaData> queryStringParams) {
+        if (queryStringParams.isEmpty()) {
             return pathSuffix;
         }
 
-        String str = pathSuffix+"?";
+        String str = pathSuffix + "?";
 
-        for(ParameterMetaData queryStringParam : queryStringParams){
-            if(!str.equals(pathSuffix+"?")){
-                str +="&";
+        for (ParameterMetaData queryStringParam : queryStringParams) {
+            if (!str.equals(pathSuffix + "?")) {
+                str += "&";
             }
             str += queryStringParam.getKey() + "=ABC";
         }
         return str;
     }
 
-    private String formatJson(List<ParameterMetaData> propertyStringParams){
+    private String formatJson(List<ParameterMetaData> propertyStringParams) {
 
-        if(propertyStringParams.isEmpty()){
+        if (propertyStringParams.isEmpty()) {
             return "";
         }
 
         String str = "\n{\n\t";
 
-        for(ParameterMetaData queryStringParam : propertyStringParams){
-            if(!str.equals("\n{\n\t")){
-                str +=",\n\t";
+        for (ParameterMetaData queryStringParam : propertyStringParams) {
+            if (!str.equals("\n{\n\t")) {
+                str += ",\n\t";
             }
-            str += "\""+ queryStringParam.getKey() + "\": \"ABC\"";
+            str += "\"" + queryStringParam.getKey() + "\": \"ABC\"";
         }
         str += "\n}";
         return str;
@@ -53,13 +53,13 @@ class MethodPrinter {
 
     private String print() {
 
-        List<ParameterMetaData> queryString =  methodMetaData
+        List<ParameterMetaData> queryString = methodMetaData
                 .getParameterMetaData()
                 .stream()
                 .filter(parameterMetaData -> parameterMetaData instanceof QueryPropertyMetaData)
                 .collect(Collectors.toList());
 
-        String str = "httpMethod " + methodMetaData.getHttpMethod() +  " pathSuffix: " + formatPath(methodMetaData.getPathSuffix(), queryString);
+        String str = "httpMethod " + methodMetaData.getHttpMethod() + " pathSuffix: " + formatPath(methodMetaData.getPathSuffix(), queryString);
 
         str += formatJson(methodMetaData
                 .getParameterMetaData()

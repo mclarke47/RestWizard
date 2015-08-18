@@ -2,6 +2,7 @@ package com.gmail.matthewclarke47;
 
 import com.gmail.matthewclarke47.formatting.DocsFormatter;
 import com.gmail.matthewclarke47.metadata.ResourceMetaData;
+import com.gmail.matthewclarke47.parsing.ResourceParser;
 import io.dropwizard.jersey.setup.JerseyEnvironment;
 import io.dropwizard.lifecycle.ServerLifecycleListener;
 import org.eclipse.jetty.server.Server;
@@ -23,11 +24,11 @@ public class RestWizard implements ServerLifecycleListener {
     }
 
     public void serverStarted(Server server) {
-        for(Object obj : jersey.getResourceConfig().getSingletons()){
+        for (Object obj : jersey.getResourceConfig().getSingletons()) {
 
             ResourceParser resourceParser = new ResourceParser(obj);
 
-                resourceMetaDataList.add(resourceParser.getMetaData());
+            resourceMetaDataList.add(resourceParser.getMetaData());
         }
 
         final List<ResourceMetaData> someList = resourceMetaDataList

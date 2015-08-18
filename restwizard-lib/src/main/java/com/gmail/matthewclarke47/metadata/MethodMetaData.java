@@ -1,5 +1,10 @@
 package com.gmail.matthewclarke47.metadata;
 
+import com.gmail.matthewclarke47.WebServiceAnnotations;
+import com.gmail.matthewclarke47.parsing.ParametersParser;
+
+import javax.ws.rs.Path;
+import java.lang.reflect.Method;
 import java.util.List;
 
 public class MethodMetaData {
@@ -14,6 +19,10 @@ public class MethodMetaData {
         this.parameterMetaData = parameterMetaData;
     }
 
+    public static MethodMetaDataBuilder builder(Method method) {
+        return new MethodMetaDataBuilder(method);
+    }
+
     @Override
     public int hashCode() {
         return super.hashCode();
@@ -22,10 +31,10 @@ public class MethodMetaData {
     @Override
     public boolean equals(Object obj) {
 
-        if(obj == null || !(obj instanceof MethodMetaData))
+        if (obj == null || !(obj instanceof MethodMetaData))
             return false;
 
-        MethodMetaData method = (MethodMetaData)obj;
+        MethodMetaData method = (MethodMetaData) obj;
 
         return this.pathSuffix.equals(method.getPathSuffix())
                 && this.httpMethod.equals(method.getHttpMethod())
@@ -35,9 +44,9 @@ public class MethodMetaData {
 
     private boolean deepCheckParamsContains(List<ParameterMetaData> parameterMetaDataList) {
 
-        for(ParameterMetaData parameterMetaData : this.getParameterMetaData()){
-            if(!parameterMetaDataList.contains(parameterMetaData)){
-               return false;
+        for (ParameterMetaData parameterMetaData : this.getParameterMetaData()) {
+            if (!parameterMetaDataList.contains(parameterMetaData)) {
+                return false;
             }
         }
         return true;
@@ -59,5 +68,37 @@ public class MethodMetaData {
     public String toString() {
 
         return MethodPrinter.print(this);
+    }
+
+    public static class MethodMetaDataBuilder {
+
+        private String httpMethod;
+        private String pathSuffix;
+        private List<ParameterMetaData> parameterMetaData;
+
+        private MethodMetaDataBuilder(Method method) {
+            this.pathSuffix = method.getAnnotation(Path.class).value();
+            this.httpMethod = getHttpMethod(method);
+            this.parameterMetaData = parseParameterMetaData(method);
+        }
+
+        private String getHttpMethod(Method method) {
+
+            return WebServiceAnnotations.HTTP_METHOD_TO_TEXT
+                    .getOrDefault(WebServiceAnnotations.HTTP_METHOD_TO_TEXT
+                            .keySet()
+                            .stream()
+                            .filter(method::isAnnotationPresent)
+                            .findFirst().get(), "");
+        }
+
+        private List<ParameterMetaData> parseParameterMetaData(Method method) {
+
+            return new ParametersParser(method).getMetaData();
+        }
+
+        public MethodMetaData build() {
+            return new MethodMetaData(this.httpMethod, this.pathSuffix, this.parameterMetaData);
+        }
     }
 }

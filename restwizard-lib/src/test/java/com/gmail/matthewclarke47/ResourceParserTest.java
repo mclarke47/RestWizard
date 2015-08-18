@@ -1,6 +1,7 @@
 package com.gmail.matthewclarke47;
 
 import com.gmail.matthewclarke47.metadata.*;
+import com.gmail.matthewclarke47.parsing.ResourceParser;
 import com.google.common.collect.Lists;
 import org.junit.Test;
 
@@ -16,7 +17,7 @@ public class ResourceParserTest {
     //TODO more non-happy path scenarios
 
     @Test
-    public void shouldDocumentGetResource(){
+    public void shouldDocumentGetResource() {
 
         GetResource simpleGet = new GetResource();
 
@@ -33,7 +34,7 @@ public class ResourceParserTest {
     }
 
     @Test
-    public void shouldDocumentPutResource(){
+    public void shouldDocumentPutResource() {
 
         PutResource simplePut = new PutResource();
 
@@ -50,7 +51,7 @@ public class ResourceParserTest {
     }
 
     @Test
-    public void shouldDocumentPostResource(){
+    public void shouldDocumentPostResource() {
 
         //TODO simplify this
         PostResource simplePost = new PostResource();
@@ -59,37 +60,35 @@ public class ResourceParserTest {
 
         assertThat(resourceMetaData.getPath(), is(simplePost.classPathValue));
 
-        ParameterMetaData queryParamData = new QueryPropertyMetaData("id", String.class);
-
-        List<ParameterMetaData> paramList1 = Lists.newArrayList(queryParamData);
+        List<ParameterMetaData> paramList1 = Lists.newArrayList(new QueryPropertyMetaData("id", String.class));
 
         List<ParameterMetaData> paramList2 = Lists.newArrayList(
-        propertyParam("thisThing", String.class),
-        propertyParam("otherParam", String.class),
-        propertyParam("count", int.class),
-        propertyParam("isBoolean", boolean.class));
+                propertyParam("thisThing", String.class),
+                propertyParam("otherParam", String.class),
+                propertyParam("count", int.class),
+                propertyParam("isBoolean", boolean.class));
 
         assertThat(resourceMetaData.getMethodMetaDataList(),
                 containsInAnyOrder(
-                methodData("POST", "some/endpoint/postObject", paramList2),
-                methodData("POST", "some/endpoint", paramList1)));
+                        methodData("POST", "some/endpoint/postObject", paramList2),
+                        methodData("POST", "some/endpoint", paramList1)));
     }
 
-    private MethodMetaData methodData(String method, String path, List<ParameterMetaData> list){
+    private MethodMetaData methodData(String method, String path, List<ParameterMetaData> list) {
         return new MethodMetaData(method, path, list);
     }
 
-    private PropertyParameterMetaData propertyParam(String key, Class<?> type){
+    private PropertyParameterMetaData propertyParam(String key, Class<?> type) {
         return new PropertyParameterMetaData(key, type);
     }
 
-    private ResourceMetaData assertAndReturnResourceData(Optional<ResourceMetaData> resourceMetaDataOptional){
+    private ResourceMetaData assertAndReturnResourceData(Optional<ResourceMetaData> resourceMetaDataOptional) {
         assertThat(resourceMetaDataOptional.isPresent(), is(true));
 
         return resourceMetaDataOptional.get();
     }
 
-    private void assertMethod(MethodMetaData methodData, String httpMethodName, String methodPath){
+    private void assertMethod(MethodMetaData methodData, String httpMethodName, String methodPath) {
         assertThat(methodData.getHttpMethod(), is(httpMethodName));
         assertThat(methodData.getPathSuffix(), is(methodPath));
     }

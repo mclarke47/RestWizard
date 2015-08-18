@@ -1,40 +1,30 @@
-package com.gmail.matthewclarke47;
+package com.gmail.matthewclarke47.parsing;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.gmail.matthewclarke47.WebServiceAnnotations;
 import com.gmail.matthewclarke47.metadata.ParameterMetaData;
 import com.gmail.matthewclarke47.metadata.ParameterMetaDataBuilder;
 
-import javax.ws.rs.PathParam;
-import javax.ws.rs.QueryParam;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.util.*;
-import java.util.function.Function;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-class ParametersParser {
-
-    private static final Map<Class<? extends Annotation>, Function<AnnotatedElement, String>> INTERESTING_ANNOTATIONS_AND_VALUE =
-            new HashMap<>();
+public class ParametersParser {
 
     private Method method;
-
-    static {
-        INTERESTING_ANNOTATIONS_AND_VALUE.put(JsonProperty.class, element -> element.getAnnotation(JsonProperty.class).value());
-        INTERESTING_ANNOTATIONS_AND_VALUE.put(QueryParam.class, element -> element.getAnnotation(QueryParam.class).value());
-        INTERESTING_ANNOTATIONS_AND_VALUE.put(PathParam.class, element -> element.getAnnotation(PathParam.class).value());
-    }
 
     public ParametersParser(Method method) {
 
         this.method = method;
     }
 
-    public List<ParameterMetaData> getMetaData(){
+    public List<ParameterMetaData> getMetaData() {
 
         return Stream.concat(
                 annotatedParameters(method.getParameters()).stream(),
@@ -85,15 +75,21 @@ class ParametersParser {
 
     private boolean parameterHasInterestingAnnotation(Parameter param) {
 
-        return INTERESTING_ANNOTATIONS_AND_VALUE.keySet().stream().anyMatch(param::isAnnotationPresent);
+        return WebServiceAnnotations.INTERESTING_ANNOTATIONS_TO_VALUE
+                .keySet()
+                .stream()
+                .anyMatch(param::isAnnotationPresent);
     }
 
     private String getAnnotationValueFromAnnotatedElement(AnnotatedElement field) {
 
-        return INTERESTING_ANNOTATIONS_AND_VALUE.get(
-                INTERESTING_ANNOTATIONS_AND_VALUE.keySet()
-                .stream()
-                .filter(field::isAnnotationPresent).findFirst().get()).apply(field);
+        return WebServiceAnnotations.INTERESTING_ANNOTATIONS_TO_VALUE.get(
+                WebServiceAnnotations.INTERESTING_ANNOTATIONS_TO_VALUE.keySet()
+                        .stream()
+                        .filter(field::isAnnotationPresent)
+                        .findFirst()
+                        .get())
+                .apply(field);
     }
 
     private boolean fieldHasJsonProperty(Field field) {

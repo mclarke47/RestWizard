@@ -4,7 +4,7 @@ import com.gmail.matthewclarke47.metadata.ResourceMetaData;
 
 import java.util.List;
 
-public class ConsoleTextFormatter implements DocsFormatter{
+public class ConsoleTextFormatter implements DocsFormatter {
 
     @Override
     public void print(List<ResourceMetaData> resourceMetaData) {

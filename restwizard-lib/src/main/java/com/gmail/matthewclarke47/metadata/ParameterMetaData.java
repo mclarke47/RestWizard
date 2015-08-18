@@ -24,10 +24,10 @@ public abstract class ParameterMetaData {
 
     @Override
     public boolean equals(Object obj) {
-        if(obj == null || !(obj instanceof ParameterMetaData))
+        if (obj == null || !(obj instanceof ParameterMetaData))
             return false;
 
-        ParameterMetaData method = (ParameterMetaData)obj;
+        ParameterMetaData method = (ParameterMetaData) obj;
 
         return this.key.equals(method.getKey())
                 && this.type.equals(method.getType());

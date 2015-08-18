@@ -1,4 +1,4 @@
-package com.gmail.matthewclarke47;
+package com.gmail.matthewclarke47.parsing;
 
 import com.gmail.matthewclarke47.metadata.MethodMetaData;
 import com.gmail.matthewclarke47.metadata.ResourceMetaData;
@@ -7,7 +7,7 @@ import javax.ws.rs.Path;
 import java.util.List;
 import java.util.Optional;
 
-class ResourceParser {
+public class ResourceParser {
 
     private Object obj;
     private Optional<ResourceMetaData> metaData;
@@ -19,7 +19,7 @@ class ResourceParser {
 
     private Optional<ResourceMetaData> document(Object obj) {
 
-        if(isResource()) {
+        if (isResource()) {
             Class<?> clazz = obj.getClass();
 
             List<MethodMetaData> methodMetaData = new MethodsParser(clazz).getMetaData();

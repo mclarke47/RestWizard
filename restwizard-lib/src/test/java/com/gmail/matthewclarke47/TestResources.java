@@ -8,10 +8,9 @@ import javax.ws.rs.core.Response;
 public class TestResources {
 
 
-
 }
 
-class PostObject{
+class PostObject {
 
     @JsonProperty("thisThing")
     private String thingParam;
@@ -47,18 +46,17 @@ class PostResource {
 
     public String classPathValue = "path/";
     public String methodPathValue = "some/endpoint";
-
-    @POST()
-    @Path("some/endpoint")
-    public Response postMethod(@QueryParam("id") String id){
-        return Response.ok().build();
-    }
-
     public String methodPathValuePostObject = "some/endpoint/postObject";
 
     @POST()
+    @Path("some/endpoint")
+    public Response postMethod(@QueryParam("id") String id) {
+        return Response.ok().build();
+    }
+
+    @POST()
     @Path("some/endpoint/postObject")
-    public Response postMethod(PostObject postObject){
+    public Response postMethod(PostObject postObject) {
         return Response.ok().build();
     }
 }
@@ -71,7 +69,7 @@ class GetResource {
 
     @GET()
     @Path("some/endpoint")
-    public Response postMethod(){
+    public Response postMethod() {
         return Response.ok().build();
     }
 }
@@ -85,7 +83,7 @@ class PutResource {
 
     @PUT()
     @Path("some/endpoint/{id}")
-    public Response postMethod(@PathParam("id") String idParam){
+    public Response postMethod(@PathParam("id") String idParam) {
         return Response.ok().build();
     }
 }
