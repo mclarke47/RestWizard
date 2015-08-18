@@ -80,10 +80,8 @@ public class ParametersParser {
 
     private boolean parameterHasDtoObject(Parameter param) {
 
-        Class<?> paramType = param.getType();
-
-        List<Field> fields = Arrays.asList(paramType.getDeclaredFields());
-
-        return fields.stream().anyMatch(field -> field.isAnnotationPresent(JsonProperty.class));
+        return Arrays.asList(param.getType().getDeclaredFields())
+                .stream()
+                .anyMatch(field -> field.isAnnotationPresent(JsonProperty.class));
     }
 }
