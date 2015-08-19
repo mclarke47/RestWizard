@@ -62,7 +62,7 @@ class PostObject{
     }
 }
 
-@Path("path/")
+@Path("postResourcePath/")
 class PostResource {
 
     @POST()
@@ -78,7 +78,7 @@ class PostResource {
     }
 }
 
-@Path("path/")
+@Path("getResourcePath/")
 class GetResource {
 
     @GET()
@@ -88,7 +88,7 @@ class GetResource {
     }
 }
 
-@Path("path/")
+@Path("putResourcePath/")
 class PutResource {
 
     @PUT()

@@ -1,5 +1,6 @@
 package com.gmail.matthewclarke47.formatting;
 
+import com.gmail.matthewclarke47.formatting.html.DocsPage;
 import com.gmail.matthewclarke47.metadata.MethodMetaData;
 import com.gmail.matthewclarke47.metadata.ParameterMetaData;
 import com.gmail.matthewclarke47.metadata.ResourceMetaData;
@@ -10,19 +11,16 @@ import java.util.List;
 public class HtmlFormatter implements DocsFormatter {
     @Override
     public void print(List<ResourceMetaData> resourceMetaData) {
-        String str = "<html><head></head><body>";
-
-        for (ResourceMetaData rmd : resourceMetaData) {
-            str += resourceToHtml(rmd);
-        }
-
-        str += "</body></html>";
 
         FileWriter fileWriter;
 
+        DocsPage docsPage = new DocsPage("Rest Wizard test app");
+
+        resourceMetaData.stream().forEach(docsPage::addResource);
+
         try {
             fileWriter = new FileWriter("./doc.html");
-            fileWriter.append(str);
+            fileWriter.append(docsPage.build());
             fileWriter.flush();
             fileWriter.close();
         } catch (Exception e) {
@@ -31,55 +29,5 @@ public class HtmlFormatter implements DocsFormatter {
 
     }
 
-    private String resourceToHtml(ResourceMetaData resourceMetaData) {
-        String str = "<hr>";
 
-        for (MethodMetaData metaData : resourceMetaData.getMethodMetaDataList())
-            str += methodToHtml(resourceMetaData, metaData);
-
-        return str;
-    }
-
-    private String methodToHtml(ResourceMetaData resourceMetaData, MethodMetaData metaData) {
-        String str = "";
-        str += "<h1>";
-        str += resourceMetaData.getPath() + metaData.getPathSuffix();
-        str += "</h1>";
-        str += "<h2>";
-        str += metaData.getHttpMethod();
-        str += "</h2>";
-        str += "<h3>";
-        str += formatJson(metaData);
-        str += "</h3>";
-        return str;
-    }
-
-    private String formatJson(MethodMetaData methodParams) {
-
-        if (methodParams.getParameterMetaData().isEmpty()) {
-            return "";
-        }
-
-        String str = "\n{\n\t";
-
-        for (ParameterMetaData property : methodParams.getParameterMetaData()) {
-            if (!str.equals("\n{\n\t")) {
-                str += ",\n\t";
-            }
-            str += "\"" + property.getKey() + "\": " + formatExample(property.getType());
-        }
-        str += "\n}";
-        return str;
-
-    }
-
-    private String formatExample(Class<?> type) {
-
-        if (type.equals(boolean.class)) {
-            return "true";
-        } else if (type.equals(int.class)) {
-            return "12345";
-        }
-        return "\"ABC\"";
-    }
 }
