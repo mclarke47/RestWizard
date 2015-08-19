@@ -65,8 +65,8 @@ public abstract class ParameterMetaData {
         private Map<Class<? extends Annotation>, Supplier<ParameterMetaData>> annotationToMetaDataSubclass =
                 ImmutableMap.<Class<? extends Annotation>, Supplier<ParameterMetaData>>builder()
                         .put(JsonProperty.class, () -> new PropertyParameterMetaData(key, type))
-                        .put(QueryParam.class, () -> new QueryPropertyMetaData(key, type))
-                        .put(PathParam.class, () -> new PathPropertyMetaData(key, type))
+                        .put(QueryParam.class, () -> new QueryParameterMetaData(key, type))
+                        .put(PathParam.class, () -> new PathParameterMetaData(key, type))
                         .build();
 
         private ParameterMetaDataBuilder(Parameter parameter) {

@@ -66,8 +66,8 @@ class PostObject{
 class PostResource {
 
     @POST()
-    @Path("some/endpoint")
-    public Response postMethod(@QueryParam("id") String id){
+    @Path("some/person")
+    public Response postMethod(@QueryParam("id") String id, @JsonProperty("name") String name){
         return Response.ok().build();
     }
 
@@ -90,6 +90,12 @@ class GetResource {
 
 @Path("putResourcePath/")
 class PutResource {
+
+    @PUT()
+    @Path("some/person")
+    public Response postPerson(@JsonProperty("name") String name){
+        return Response.ok().build();
+    }
 
     @PUT()
     @Path("some/endpoint/{id}")

@@ -23,4 +23,8 @@ public class BootstrapLayout {
         rows.add(row);
         return row;
     }
+
+    public BootstrapRow row() {
+        return row("");
+    }
 }

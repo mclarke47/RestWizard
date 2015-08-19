@@ -56,7 +56,7 @@ class MethodPrinter {
         List<ParameterMetaData> queryString = methodMetaData
                 .getParameterMetaData()
                 .stream()
-                .filter(parameterMetaData -> parameterMetaData instanceof QueryPropertyMetaData)
+                .filter(parameterMetaData -> parameterMetaData instanceof QueryParameterMetaData)
                 .collect(Collectors.toList());
 
         String str = "httpMethod " + methodMetaData.getHttpMethod() + " pathSuffix: " + formatPath(methodMetaData.getPathSuffix(), queryString);

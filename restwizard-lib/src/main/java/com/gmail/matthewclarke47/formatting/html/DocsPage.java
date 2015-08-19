@@ -1,11 +1,11 @@
 package com.gmail.matthewclarke47.formatting.html;
 
-import com.gmail.matthewclarke47.metadata.MethodMetaData;
-import com.gmail.matthewclarke47.metadata.ParameterMetaData;
-import com.gmail.matthewclarke47.metadata.ResourceMetaData;
+import com.gmail.matthewclarke47.metadata.*;
 import com.google.common.collect.ImmutableMap;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class DocsPage {
 
@@ -57,29 +57,142 @@ public class DocsPage {
 
         String str = "<div class=\"panel panel-"+style+"\">";
         str += "<div class=\"panel-heading\">";
-        str += "<strong>"+metaData.getHttpMethod() + "</strong> " + metaData.getPathSuffix();
+        str += "<strong>"+metaData.getHttpMethod() + "</strong> " + metaData.getPathSuffix() + getQueryParamIfPresent(metaData);
         str += "</div>";
-        str += " <div class=\"panel-body\">" +formatJson(metaData) + "</div>";
+        str += " <div class=\"panel-body\">" +formatMetadataBody(metaData) + "</div>";
         str += "</div>";
         return str;
     }
 
+    private String formatMetadataBody(MethodMetaData metaData){
+        BootstrapLayout bootstrapLayout = new BootstrapLayout();
+
+        BootstrapRow queryParamTable = bootstrapLayout.row();
+        queryParamTable.addCol(queryParamTable(metaData));
+
+        BootstrapRow pathParamTable = bootstrapLayout.row();
+        pathParamTable.addCol(pathParamTable(metaData));
+
+        BootstrapRow jsonRow = bootstrapLayout.row();
+        jsonRow.addCol(formatJson(metaData));
+
+        return bootstrapLayout.toString();
+    }
+
+    private String queryParamTable(MethodMetaData metaData) {
+        if( metaData.getParameterMetaData().stream().anyMatch(parameterMetaData -> parameterMetaData instanceof QueryParameterMetaData))
+        {
+            List<QueryParameterMetaData> queryStringParams = metaData.getParameterMetaData().stream()
+                    .filter(parameterMetaData -> parameterMetaData instanceof QueryParameterMetaData)
+                    .map(parameterMetaData -> (QueryParameterMetaData) parameterMetaData)
+                    .collect(Collectors.toList());
+            String tStart = "<h4>Query parameters</h4><table class=\"table table-striped\">\n" +
+                    "    <thead>\n" +
+                    "      <tr>\n" +
+                    "        <th>Query Parameter Key</th>\n" +
+                    "        <th>Query Parameter example value</th>\n" +
+                    "      </tr>\n" +
+                    "    </thead><tbody>";
+            String tEnd = "</tbody>\n" +
+                    "  </table>";
+
+            String tContents ="";
+
+            for (QueryParameterMetaData queryStringParam : queryStringParams) {
+                tContents += "<tr>\n" +
+                        "        <td>"+queryStringParam.getKey()+"</td>\n" +
+                        "        <td>ABC</td>\n" +
+                        "      </tr>";
+            }
+
+
+
+            return tStart + tContents + tEnd;
+        }
+        return "";
+    }
+
+    private String pathParamTable(MethodMetaData metaData) {
+        if( metaData.getParameterMetaData().stream().anyMatch(parameterMetaData -> parameterMetaData instanceof PathParameterMetaData))
+        {
+            List<PathParameterMetaData> pathStringParams = metaData.getParameterMetaData().stream()
+                    .filter(parameterMetaData -> parameterMetaData instanceof PathParameterMetaData)
+                    .map(parameterMetaData -> (PathParameterMetaData) parameterMetaData)
+                    .collect(Collectors.toList());
+            String tStart = "<h4>Path parameters</h4><table class=\"table table-striped\">\n" +
+                    "    <thead>\n" +
+                    "      <tr>\n" +
+                    "        <th>Path Parameter Key</th>\n" +
+                    "        <th>Path Parameter example value</th>\n" +
+                    "      </tr>\n" +
+                    "    </thead><tbody>";
+            String tEnd = "</tbody>\n" +
+                    "  </table>";
+
+            String tContents ="";
+
+            for (PathParameterMetaData pathStringParam : pathStringParams) {
+                tContents += "<tr>\n" +
+                        "        <td>"+pathStringParam.getKey()+"</td>\n" +
+                        "        <td>ABC</td>\n" +
+                        "      </tr>";
+            }
+
+
+
+            return tStart + tContents + tEnd;
+        }
+        return "";
+    }
+
+    private String getQueryParamIfPresent(MethodMetaData metaData) {
+        if( metaData.getParameterMetaData().stream().anyMatch(parameterMetaData -> parameterMetaData instanceof QueryParameterMetaData))
+        {
+            List<QueryParameterMetaData> queryStringParams = metaData.getParameterMetaData().stream()
+                    .filter(parameterMetaData -> parameterMetaData instanceof QueryParameterMetaData)
+                    .map(parameterMetaData -> (QueryParameterMetaData) parameterMetaData)
+                    .collect(Collectors.toList());
+            String str = "?";
+
+            for (QueryParameterMetaData queryStringParam : queryStringParams) {
+                if (!str.equals("?")) {
+                    str += "&";
+                }
+                str += queryStringParam.getKey() + "=ABC";
+            }
+            return str;
+        }
+        return "";
+    }
+
     private String formatJson(MethodMetaData methodParams) {
 
-        if (methodParams.getParameterMetaData().isEmpty()) {
+        if (containsJsonData(methodParams)) {
+            List<PropertyParameterMetaData> propertyParams = methodParams.getParameterMetaData().stream()
+                    .filter(parameterMetaData -> parameterMetaData instanceof PropertyParameterMetaData)
+                    .map(parameterMetaData -> (PropertyParameterMetaData) parameterMetaData)
+                    .collect(Collectors.toList());
+
+            String str = "<h4>Request example:</h4><pre>\n{\n\t";
+
+            for (PropertyParameterMetaData property : propertyParams) {
+                if (!str.equals("<h4>Request example:</h4><pre>\n{\n\t")) {
+                    str += ",\n\t";
+                }
+                str += "\"" + property.getKey() + "\": " + formatExample(property.getType());
+            }
+            str += "\n}</pre>";
+            return str;
+        }
+        else {
             return "";
         }
 
-        String str = "<h4>Request example:</h4><pre>\n{\n\t";
+    }
 
-        for (ParameterMetaData property : methodParams.getParameterMetaData()) {
-            if (!str.equals("<h4>Request example:</h4><pre>\n{\n\t")) {
-                str += ",\n\t";
-            }
-            str += "\"" + property.getKey() + "\": " + formatExample(property.getType());
-        }
-        str += "\n}</pre>";
-        return str;
+    private boolean containsJsonData(MethodMetaData methodParams){
+        return !methodParams.getParameterMetaData().isEmpty() && methodParams.getParameterMetaData().stream()
+                .anyMatch(parameterMetaData -> parameterMetaData instanceof PropertyParameterMetaData);
 
     }
 

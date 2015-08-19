@@ -47,7 +47,7 @@ public class ResourceParserTest {
 
         assertMethod(methodData, "PUT", simplePut.methodPathValue);
 
-        assertThat(methodData.getParameterMetaData(), containsInAnyOrder(new PathPropertyMetaData("id", String.class)));
+        assertThat(methodData.getParameterMetaData(), containsInAnyOrder(new PathParameterMetaData("id", String.class)));
     }
 
     @Test
@@ -60,7 +60,7 @@ public class ResourceParserTest {
 
         assertThat(resourceMetaData.getPath(), is(simplePost.classPathValue));
 
-        List<ParameterMetaData> paramList1 = Lists.newArrayList(new QueryPropertyMetaData("id", String.class));
+        List<ParameterMetaData> paramList1 = Lists.newArrayList(new QueryParameterMetaData("id", String.class));
 
         List<ParameterMetaData> paramList2 = Lists.newArrayList(
                 propertyParam("thisThing", String.class),
