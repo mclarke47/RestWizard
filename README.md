@@ -1,4 +1,4 @@
-# restWizard
+# RestWizard
 [![Build Status](https://travis-ci.org/mclarke47/RestWizard.svg)](https://travis-ci.org/mclarke47/RestWizard)
 
 Still very much in progress.
@@ -15,8 +15,8 @@ To build an unintrusive componenet which can be added to a dropwizard applicatio
 
 Must be:
 
-* Completely unintrusive to the Resource Java classes (no extra annotations, no exceptions!!).
-* Easy to integrate with. One command in the dropwizard App class. The end.
+* Completely unintrusive to the resource Java classes (no extra annotations, no exceptions!!).
+* Easy to integrate with. One command in the dropwizard app class. The end.
 
 ## Screenshot
 ![alt tag](https://raw.githubusercontent.com/mclarke47/RestWizard/master/screenshot.png)
