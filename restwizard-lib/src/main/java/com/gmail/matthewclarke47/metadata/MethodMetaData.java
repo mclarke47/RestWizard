@@ -55,6 +55,10 @@ public class MethodMetaData {
                     .map(parameterMetaData -> (PropertyParameterMetaData) parameterMetaData)
                     .collect(Collectors.toList());
 
+            if(propertyParams.isEmpty()){
+                return "";
+            }
+
             String str = "{\n\t";
 
             for (PropertyParameterMetaData property : propertyParams) {

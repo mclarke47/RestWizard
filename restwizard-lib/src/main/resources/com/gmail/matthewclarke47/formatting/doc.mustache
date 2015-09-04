@@ -8,9 +8,16 @@
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script>
         $(document).ready(function () {
-            $("table").filter(function (index) {
-                return $(this).find("tbody").children().length == 0
-            }).hide()
+
+            function emptyTables(){
+                return $("table").filter(function (index) {
+                    return $(this).find("tbody").children().length == 0
+                })
+            }
+
+            emptyTables().hide();
+            emptyTables().prev().hide();
+
         });</script>
 </head>
 <body>
