@@ -1,0 +1,19 @@
+<div class="col-sm-12">
+    <h4>Path parameters</h4>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Path Parameter Key</th>
+            <th>Path Parameter example value</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#pathParams}}
+            <tr>
+                <td>{{key}}</td>
+                <td>{{value}}</td>
+            </tr>
+        {{/pathParams}}
+        </tbody>
+    </table>
+</div>

@@ -16,11 +16,30 @@ import java.util.function.Supplier;
 
 public abstract class ParameterMetaData {
     private String key;
+
+
+
+    private String value;
     private Class<?> type;
 
     public ParameterMetaData(String key, Class<?> type) {
         this.key = key;
         this.type = type;
+        this.value = formatExample(type);
+    }
+
+    private String formatExample(Class<?> type) {
+
+        if (type.equals(boolean.class)) {
+            return "true";
+        } else if (type.equals(int.class)) {
+            return "12345";
+        }
+        return "\"ABC\"";
+    }
+
+    public String getValue() {
+        return value;
     }
 
     public static ParameterMetaDataBuilder builder(Field field) {

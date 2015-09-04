@@ -6,6 +6,7 @@ import com.gmail.matthewclarke47.parsing.ParametersParser;
 import javax.ws.rs.Path;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MethodMetaData {
 
@@ -13,10 +14,68 @@ public class MethodMetaData {
     private String pathSuffix;
     private List<ParameterMetaData> parameterMetaData;
 
+    public List<QueryParameterMetaData> getQueryParams() {
+        return queryParams;
+    }
+
+    private List<QueryParameterMetaData> queryParams;
+
+    public List<PathParameterMetaData> getPathParams() {
+        return pathParams;
+    }
+
+    private List<PathParameterMetaData> pathParams;
+
+    public String getResponseExample() {
+        return responseExample;
+    }
+
+    private String responseExample;
+
     public MethodMetaData(String httpMethod, String pathSuffix, List<ParameterMetaData> parameterMetaData) {
         this.httpMethod = httpMethod;
         this.pathSuffix = pathSuffix;
         this.parameterMetaData = parameterMetaData;
+        this.queryParams = parameterMetaData.stream()
+                .filter(paramdata -> paramdata instanceof QueryParameterMetaData)
+                .map(paramdata1 -> (QueryParameterMetaData) paramdata1)
+                .collect(Collectors.toList());
+
+        this.pathParams = parameterMetaData.stream()
+                .filter(paramdata -> paramdata instanceof PathParameterMetaData)
+                .map(paramdata1 -> (PathParameterMetaData) paramdata1)
+                .collect(Collectors.toList());
+        this.responseExample = createResponseExample(parameterMetaData);
+    }
+
+    private String createResponseExample(List<ParameterMetaData> parameterMetaDatas) {
+
+            List<PropertyParameterMetaData> propertyParams = parameterMetaDatas.stream()
+                    .filter(parameterMetaData -> parameterMetaData instanceof PropertyParameterMetaData)
+                    .map(parameterMetaData -> (PropertyParameterMetaData) parameterMetaData)
+                    .collect(Collectors.toList());
+
+            String str = "{\n\t";
+
+            for (PropertyParameterMetaData property : propertyParams) {
+                if (!str.equals("{\n\t")) {
+                    str += ",\n\t";
+                }
+                str += "\"" + property.getKey() + "\": " + formatExample(property.getType());
+            }
+            str += "\n}";
+            return str;
+
+    }
+
+    private String formatExample(Class<?> type) {
+
+        if (type.equals(boolean.class)) {
+            return "true";
+        } else if (type.equals(int.class)) {
+            return "12345";
+        }
+        return "\"ABC\"";
     }
 
     public static MethodMetaDataBuilder builder(Method method) {
@@ -62,12 +121,6 @@ public class MethodMetaData {
 
     public List<ParameterMetaData> getParameterMetaData() {
         return parameterMetaData;
-    }
-
-    @Override
-    public String toString() {
-
-        return MethodPrinter.print(this);
     }
 
     public static class MethodMetaDataBuilder {

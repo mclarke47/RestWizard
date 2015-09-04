@@ -1,0 +1,19 @@
+<div class="col-sm-12">
+    <h4>Query parameters</h4>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Query Parameter Key</th>
+            <th>Query Parameter example value</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#queryParams}}
+            <tr>
+                <td>{{key}}</td>
+                <td>{{value}}</td>
+            </tr>
+        {{/queryParams}}
+        </tbody>
+    </table>
+</div>
