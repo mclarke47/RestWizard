@@ -16,22 +16,22 @@ public class ClassParser {
         this.clazz = clazz;
     }
 
-    public List<MethodMetaData> getMetaData() {
+    public List<MethodMetaData> getMethodMetaDataList() {
 
         return Stream.of(clazz.getDeclaredMethods())
-                .filter(this::methodHasHttpMethod)
-                .map(this::toMethodMetaData)
+                .filter(this::isHttpMethod)
+                .map(this::methodToMethodMetaData)
                 .collect(Collectors.toList());
     }
 
-    private boolean methodHasHttpMethod(Method method) {
+    private boolean isHttpMethod(Method method) {
         return WebServiceAnnotations.HTTP_METHOD_TO_TEXT
                 .keySet()
                 .stream()
                 .anyMatch(method::isAnnotationPresent);
     }
 
-    private MethodMetaData toMethodMetaData(Method method) {
+    private MethodMetaData methodToMethodMetaData(Method method) {
 
         return MethodMetaData
                 .builder(method)

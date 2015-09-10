@@ -2,6 +2,7 @@ package com.gmail.matthewclarke47.metadata;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.gmail.matthewclarke47.WebServiceAnnotations;
+import com.gmail.matthewclarke47.formatting.TypeInferringExampleGenerator;
 import com.google.common.collect.ImmutableMap;
 
 import javax.ws.rs.PathParam;
@@ -23,21 +24,7 @@ public abstract class ParameterMetaData {
     public ParameterMetaData(String key, Class<?> type) {
         this.key = key;
         this.type = type;
-        this.value = formatExample(type);
-    }
-
-    private String formatExample(Class<?> type) {
-
-        if (type.equals(boolean.class)) {
-            return "true";
-        } else if (type.equals(int.class)) {
-            return "12345";
-        }
-        return "\"ABC\"";
-    }
-
-    public String getValue() {
-        return value;
+        this.value = TypeInferringExampleGenerator.getExample(type);
     }
 
     public static ParameterMetaDataBuilder builder(Field field) {
@@ -46,6 +33,10 @@ public abstract class ParameterMetaData {
 
     public static ParameterMetaDataBuilder builder(Parameter parameter) {
         return new ParameterMetaDataBuilder(parameter);
+    }
+
+    public String getValue() {
+        return value;
     }
 
     public String getKey() {
@@ -58,8 +49,8 @@ public abstract class ParameterMetaData {
 
     public static class ParameterMetaDataBuilder {
 
-        private Optional<Parameter> parameter = Optional.empty();
-        private Optional<Field> field = Optional.empty();
+        private Optional<AnnotatedElement> parameter = Optional.empty();
+        private Optional<AnnotatedElement> field = Optional.empty();
         private String key;
         private Class<?> type;
 
@@ -96,19 +87,20 @@ public abstract class ParameterMetaData {
 
         public ParameterMetaData build() {
 
+            //// FIXME: 10/09/2015 make nicer
             for (Class<? extends Annotation> clazz : annotationToMetaDataSubclass.keySet()) {
-                if (parameter.isPresent()) {
-                    if (parameter.get().isAnnotationPresent(clazz)) {
-                        return annotationToMetaDataSubclass.get(clazz).get();
-                    }
+                if (isAnnotationPresent(clazz, parameter)) {
+                    return annotationToMetaDataSubclass.get(clazz).get();
                 }
-                if (field.isPresent()) {
-                    if (field.get().isAnnotationPresent(clazz)) {
-                        return annotationToMetaDataSubclass.get(clazz).get();
-                    }
+                if (isAnnotationPresent(clazz, field)) {
+                    return annotationToMetaDataSubclass.get(clazz).get();
                 }
             }
             return null;
+        }
+
+        private boolean isAnnotationPresent(Class<? extends Annotation> clazz, Optional<AnnotatedElement> element) {
+            return element.isPresent() && element.get().isAnnotationPresent(clazz);
         }
     }
 }

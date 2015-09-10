@@ -13,13 +13,13 @@ public class PutResource {
 
     @PUT()
     @Path("some/person")
-    public Response postPerson(@JsonProperty("name") String name){
+    public Response postPerson(@JsonProperty("name") String name) {
         return Response.ok().build();
     }
 
     @PUT()
     @Path("some/endpoint/{id}")
-    public Response postMethod(@PathParam("id") String idParam){
+    public Response postMethod(@PathParam("id") String idParam) {
         return Response.ok().build();
     }
 }

@@ -4,12 +4,13 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
-public @Path("getResourcePath/")
+public
+@Path("getResourcePath/")
 class GetResource {
 
     @GET()
     @Path("some/endpoint")
-    public Response postMethod(){
+    public Response postMethod() {
         return Response.ok().build();
     }
 }

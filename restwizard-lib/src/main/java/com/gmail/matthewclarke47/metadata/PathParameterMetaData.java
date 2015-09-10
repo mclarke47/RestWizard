@@ -8,11 +8,11 @@ public class PathParameterMetaData extends ParameterMetaData {
         super(key, type);
     }
 
-    public static PathParameterMetaData castTo(ParameterMetaData parameterMetaData){
+    public static PathParameterMetaData castTo(ParameterMetaData parameterMetaData) {
         return (PathParameterMetaData) parameterMetaData;
     }
 
-    public static List<PathParameterMetaData> castTo(List<ParameterMetaData> parameterMetaData){
+    public static List<PathParameterMetaData> castTo(List<ParameterMetaData> parameterMetaData) {
         return parameterMetaData.stream()
                 .filter(paramData -> paramData instanceof PathParameterMetaData)
                 .map(PathParameterMetaData::castTo)

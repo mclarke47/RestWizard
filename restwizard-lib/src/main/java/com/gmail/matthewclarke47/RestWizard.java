@@ -12,8 +12,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class RestWizard implements ServerLifecycleListener {
-    private JerseyEnvironment jersey;
     private static List<ResourceMetaData> list = new ArrayList<>();
+    private JerseyEnvironment jersey;
 
     public RestWizard(JerseyEnvironment jersey) {
         this.jersey = jersey;
@@ -29,14 +29,12 @@ public class RestWizard implements ServerLifecycleListener {
                 .<ResourceMetaData>map(Optional::get)
                 .collect(Collectors.toList());
 
+        // FIXME: 10/09/2015 static assignment is not nice!
         RestWizard.list.addAll(list);
-
-        //docsFormatter.print(list);
-
 
     }
 
-    public DocResource getDocResource(){
+    public DocResource getDocResource() {
         return new DocResource(list);
     }
 

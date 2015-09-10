@@ -22,7 +22,7 @@ public class MethodParser {
         this.method = method;
     }
 
-    public List<ParameterMetaData> getMetaData() {
+    public List<ParameterMetaData> getParameterMetaDataList() {
 
         return Stream.concat(
                 annotatedParameters(method.getParameters()).stream(),

@@ -1,35 +1,20 @@
 package com.gmail.matthewclarke47.metadata;
 
 import com.gmail.matthewclarke47.WebServiceAnnotations;
-import com.gmail.matthewclarke47.parsing.ParametersParser;
+import com.gmail.matthewclarke47.formatting.JsonFormatter;
+import com.gmail.matthewclarke47.parsing.MethodParser;
 
 import javax.ws.rs.Path;
 import java.lang.reflect.Method;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class MethodMetaData {
 
     private String httpMethod;
     private String pathSuffix;
     private List<ParameterMetaData> parameterMetaData;
-
-    public List<QueryParameterMetaData> getQueryParams() {
-        return queryParams;
-    }
-
     private List<QueryParameterMetaData> queryParams;
-
-    public List<PathParameterMetaData> getPathParams() {
-        return pathParams;
-    }
-
     private List<PathParameterMetaData> pathParams;
-
-    public String getResponseExample() {
-        return responseExample;
-    }
-
     private String responseExample;
 
     public MethodMetaData(String httpMethod, String pathSuffix, List<ParameterMetaData> parameterMetaData) {
@@ -41,42 +26,26 @@ public class MethodMetaData {
         this.responseExample = createResponseExample(parameterMetaData);
     }
 
-    private String createResponseExample(List<ParameterMetaData> parameterMetaDatas) {
-
-            List<PropertyParameterMetaData> propertyParams = parameterMetaDatas.stream()
-                    .filter(parameterMetaData -> parameterMetaData instanceof PropertyParameterMetaData)
-                    .map(parameterMetaData -> (PropertyParameterMetaData) parameterMetaData)
-                    .collect(Collectors.toList());
-
-            if(propertyParams.isEmpty()){
-                return "";
-            }
-
-            String str = "{\n\t";
-
-            for (PropertyParameterMetaData property : propertyParams) {
-                if (!str.equals("{\n\t")) {
-                    str += ",\n\t";
-                }
-                str += "\"" + property.getKey() + "\": " + formatExample(property.getType());
-            }
-            str += "\n}";
-            return str;
-
-    }
-
-    private String formatExample(Class<?> type) {
-
-        if (type.equals(boolean.class)) {
-            return "true";
-        } else if (type.equals(int.class)) {
-            return "12345";
-        }
-        return "\"ABC\"";
-    }
-
     public static MethodMetaDataBuilder builder(Method method) {
         return new MethodMetaDataBuilder(method);
+    }
+
+    public List<QueryParameterMetaData> getQueryParams() {
+        return queryParams;
+    }
+
+    public List<PathParameterMetaData> getPathParams() {
+        return pathParams;
+    }
+
+    public String getResponseExample() {
+        return responseExample;
+    }
+
+    private String createResponseExample(List<ParameterMetaData> parameterMetaDatas) {
+
+        return new JsonFormatter(PropertyParameterMetaData.castTo(parameterMetaDatas)).format();
+
     }
 
     public String getHttpMethod() {
@@ -104,10 +73,9 @@ public class MethodMetaData {
         }
 
         private String getPathSuffix(Method method) {
-            if(method.isAnnotationPresent(Path.class)) {
+            if (method.isAnnotationPresent(Path.class)) {
                 return method.getAnnotation(Path.class).value();
-            }
-            else{
+            } else {
                 return "";
             }
         }
@@ -124,7 +92,7 @@ public class MethodMetaData {
 
         private List<ParameterMetaData> parseParameterMetaData(Method method) {
 
-            return new ParametersParser(method).getMetaData();
+            return new MethodParser(method).getParameterMetaDataList();
         }
 
         public MethodMetaData build() {

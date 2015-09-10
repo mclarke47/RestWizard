@@ -1,5 +1,6 @@
 package com.gmail.matthewclarke47.metadata;
 
+import javax.ws.rs.HttpMethod;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,10 +15,10 @@ public class ResourceMetaData {
 
     public ResourceMetaData(String path, List<MethodMetaData> methodMetaDataList) {
         this.path = path;
-        this.getMethods = sortMethods(methodMetaDataList, "GET");
-        this.postMethods = sortMethods(methodMetaDataList, "POST");
-        this.putMethods = sortMethods(methodMetaDataList, "PUT");
-        this.deleteMethods = sortMethods(methodMetaDataList, "DELETE");
+        this.getMethods = sortMethods(methodMetaDataList, HttpMethod.GET);
+        this.postMethods = sortMethods(methodMetaDataList, HttpMethod.POST);
+        this.putMethods = sortMethods(methodMetaDataList, HttpMethod.PUT);
+        this.deleteMethods = sortMethods(methodMetaDataList, HttpMethod.DELETE);
     }
 
     private List<MethodMetaData> sortMethods(List<MethodMetaData> methodMetaDataList, String httpMethod) {

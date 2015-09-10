@@ -12,13 +12,13 @@ public class PostResource {
 
     @POST()
     @Path("some/person")
-    public Response postMethod(@QueryParam("id") String id, @JsonProperty("name") String name){
+    public Response postMethod(@QueryParam("id") String id, @JsonProperty("name") String name) {
         return Response.ok().build();
     }
 
     @POST()
     @Path("some/endpoint/postObject")
-    public Response postMethod(PostObject postObject){
+    public Response postMethod(PostObject postObject) {
         return Response.ok().build();
     }
 }

@@ -22,7 +22,7 @@ public class ResourceParser {
         if (isResource()) {
             Class<?> clazz = obj.getClass();
 
-            List<MethodMetaData> methodMetaData = new MethodsParser(clazz).getMetaData();
+            List<MethodMetaData> methodMetaData = new ClassParser(clazz).getMethodMetaDataList();
 
             return Optional.of(new ResourceMetaData(clazz.getAnnotation(Path.class).value(), methodMetaData));
         }

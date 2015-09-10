@@ -9,7 +9,7 @@ public class NoMethodPath {
 
 
     @GET
-    public Response postMethod(){
+    public Response postMethod() {
         return Response.ok().build();
     }
 }

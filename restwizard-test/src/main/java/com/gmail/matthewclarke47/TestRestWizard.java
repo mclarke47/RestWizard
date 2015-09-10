@@ -7,17 +7,17 @@ import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.dropwizard.views.ViewBundle;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.Response;
-
 public class TestRestWizard extends Application<HelloWorldConfiguration> {
+
+    public static void main(String... args) throws Exception {
+        new TestRestWizard().run(args);
+    }
 
     @Override
     public void run(HelloWorldConfiguration configuration, Environment environment) throws Exception {
         environment.jersey().register(new PostResource());
         environment.jersey().register(new GetResource());
         environment.jersey().register(new PutResource());
-        // environment.jersey().register(new NoClassPath());
         environment.jersey().register(new NoMethodPath());
         RestWizard restWizard = new RestWizard(environment.jersey());
         environment.lifecycle().addServerLifecycleListener(restWizard);
@@ -28,13 +28,9 @@ public class TestRestWizard extends Application<HelloWorldConfiguration> {
     public void initialize(Bootstrap<HelloWorldConfiguration> bootstrap) {
         bootstrap.addBundle(new ViewBundle<>());
     }
-
-    public static void main(String... args) throws Exception {
-        new TestRestWizard().run(args);
-    }
 }
 
-class PostObject{
+class PostObject {
 
     @JsonProperty("thisThing")
     private String thingParam;

@@ -17,6 +17,7 @@ public class WebServiceAnnotations {
                     .put(POST.class, HttpMethod.POST)
                     .put(PUT.class, HttpMethod.PUT)
                     .put(DELETE.class, HttpMethod.DELETE).build();
+
     public static final Map<Class<? extends Annotation>, Function<AnnotatedElement, String>> INTERESTING_ANNOTATIONS_TO_VALUE =
             ImmutableMap.<Class<? extends Annotation>, Function<AnnotatedElement, String>>builder()
                     .put(JsonProperty.class, element -> element.getAnnotation(JsonProperty.class).value())
