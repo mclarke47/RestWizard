@@ -34,48 +34,23 @@
             </div>
             <div class="row">
                 {{#getMethods}}
-                    <div class="row">
-                        <div class="panel panel-success">
-                            <div class="panel-heading"><strong>GET</strong>   {{pathSuffix}}</div>
-                            <div class="panel-body">
-                                <div class="row ">
-                                    {{>queryParams}}
-                                    {{>pathParams}}
-                                    {{>responseExample}}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
+                    {{> getTable}}
+
                 {{/getMethods}}
+            </div>
+            <div class="row">
                 {{#postMethods}}
-                    <div class="row">
-                        <div class="panel panel-primary">
-                            <div class="panel-heading"><strong>POST</strong>   {{pathSuffix}}</div>
-                            <div class="panel-body">
-                                <div class="row ">
-                                    {{>queryParams}}
-                                    {{>pathParams}}
-                                    {{>responseExample}}
 
-                                </div>
+                    {{> postTable}}
 
-                            </div>
-                        </div>
-                    </div>
                 {{/postMethods}}
+            </div>
+            <div class="row">
                 {{#putMethods}}
-                    <div class="row">
-                        <div class="panel panel-info">
-                            <div class="panel-heading"><strong>PUT</strong>   {{pathSuffix}}</div>
-                            <div class="panel-body">
-                                <div class="row ">
-                                    {{>queryParams}}
-                                    {{>pathParams}}
-                                    {{>responseExample}}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
+                    {{> putTable}}
+
                 {{/putMethods}}
             </div>
         </div>
