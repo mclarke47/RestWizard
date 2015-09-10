@@ -9,11 +9,15 @@
     <script>
         $(document).ready(function () {
 
-            function emptyTables(){
+            function emptyTables() {
                 return $("table").filter(function (index) {
                     return $(this).find("tbody").children().length == 0
                 })
             }
+
+            var emptyPres = $('pre:empty');
+            emptyPres.prev().hide();
+            emptyPres.hide();
 
             emptyTables().hide();
             emptyTables().prev().hide();
@@ -23,22 +27,20 @@
 <body>
 <div class="container">
     <div class="page-header"><h1>Rest Wizard test app</h1></div>
-
     {{#resources}}
-        <h2>{{path}}</h2>
-
+        <div class="row">
+            <h2>{{path}}</h2>
+        </div>
         <div class="row">
             {{#getMethods}}
                 <div class="row">
                     <div class="panel panel-success">
-                        <div class="panel-heading">{{pathSuffix}}</div>
+                        <div class="panel-heading"><strong>GET</strong>   {{pathSuffix}}</div>
                         <div class="panel-body">
                             <div class="row ">
-
                                 {{>queryParams}}
                                 {{>pathParams}}
                                 {{>responseExample}}
-
                             </div>
                         </div>
                     </div>
@@ -47,10 +49,9 @@
             {{#postMethods}}
                 <div class="row">
                     <div class="panel panel-primary">
-                        <div class="panel-heading">{{pathSuffix}}</div>
+                        <div class="panel-heading"><strong>POST</strong>   {{pathSuffix}}</div>
                         <div class="panel-body">
                             <div class="row ">
-
                                 {{>queryParams}}
                                 {{>pathParams}}
                                 {{>responseExample}}
@@ -65,21 +66,18 @@
         {{#putMethods}}
             <div class="row">
                 <div class="panel panel-info">
-                    <div class="panel-heading">{{pathSuffix}}</div>
+                    <div class="panel-heading"><strong>PUT</strong>   {{pathSuffix}}</div>
                     <div class="panel-body">
                         <div class="row ">
-
                             {{>queryParams}}
                             {{>pathParams}}
                             {{>responseExample}}
-
                         </div>
                     </div>
                 </div>
             </div>
         {{/putMethods}}
     {{/resources}}
-
 </div>
 </body>
 </html>

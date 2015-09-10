@@ -36,15 +36,8 @@ public class MethodMetaData {
         this.httpMethod = httpMethod;
         this.pathSuffix = pathSuffix;
         this.parameterMetaData = parameterMetaData;
-        this.queryParams = parameterMetaData.stream()
-                .filter(paramdata -> paramdata instanceof QueryParameterMetaData)
-                .map(paramdata1 -> (QueryParameterMetaData) paramdata1)
-                .collect(Collectors.toList());
-
-        this.pathParams = parameterMetaData.stream()
-                .filter(paramdata -> paramdata instanceof PathParameterMetaData)
-                .map(paramdata1 -> (PathParameterMetaData) paramdata1)
-                .collect(Collectors.toList());
+        this.queryParams = QueryParameterMetaData.castTo(parameterMetaData);
+        this.pathParams = PathParameterMetaData.castTo(parameterMetaData);
         this.responseExample = createResponseExample(parameterMetaData);
     }
 
@@ -86,35 +79,6 @@ public class MethodMetaData {
         return new MethodMetaDataBuilder(method);
     }
 
-    @Override
-    public int hashCode() {
-        return super.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-
-        if (obj == null || !(obj instanceof MethodMetaData))
-            return false;
-
-        MethodMetaData method = (MethodMetaData) obj;
-
-        return this.pathSuffix.equals(method.getPathSuffix())
-                && this.httpMethod.equals(method.getHttpMethod())
-                && this.getParameterMetaData().size() == method.getParameterMetaData().size()
-                && deepCheckParamsContains(method.getParameterMetaData());
-    }
-
-    private boolean deepCheckParamsContains(List<ParameterMetaData> parameterMetaDataList) {
-
-        for (ParameterMetaData parameterMetaData : this.getParameterMetaData()) {
-            if (!parameterMetaDataList.contains(parameterMetaData)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     public String getHttpMethod() {
         return httpMethod;
     }
@@ -134,9 +98,18 @@ public class MethodMetaData {
         private List<ParameterMetaData> parameterMetaData;
 
         private MethodMetaDataBuilder(Method method) {
-            this.pathSuffix = method.getAnnotation(Path.class).value();
+            this.pathSuffix = getPathSuffix(method);
             this.httpMethod = getHttpMethod(method);
             this.parameterMetaData = parseParameterMetaData(method);
+        }
+
+        private String getPathSuffix(Method method) {
+            if(method.isAnnotationPresent(Path.class)) {
+                return method.getAnnotation(Path.class).value();
+            }
+            else{
+                return "";
+            }
         }
 
         private String getHttpMethod(Method method) {

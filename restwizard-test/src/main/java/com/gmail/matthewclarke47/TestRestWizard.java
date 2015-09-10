@@ -17,6 +17,8 @@ public class TestRestWizard extends Application<HelloWorldConfiguration> {
         environment.jersey().register(new PostResource());
         environment.jersey().register(new GetResource());
         environment.jersey().register(new PutResource());
+        // environment.jersey().register(new NoClassPath());
+        environment.jersey().register(new NoMethodPath());
         RestWizard restWizard = new RestWizard(environment.jersey());
         environment.lifecycle().addServerLifecycleListener(restWizard);
         environment.jersey().register(restWizard.getDocResource());
