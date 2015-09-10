@@ -13,11 +13,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class ParametersParser {
+public class MethodParser {
 
     private Method method;
 
-    public ParametersParser(Method method) {
+    public MethodParser(Method method) {
 
         this.method = method;
     }
@@ -34,7 +34,7 @@ public class ParametersParser {
 
         return Stream.of(params)
                 .filter(this::parameterHasInterestingAnnotation)
-                .map(this::parameterToMetaData)
+                .map(this::parameterToParameterMetaData)
                 .collect(Collectors.toList());
     }
 
@@ -42,25 +42,25 @@ public class ParametersParser {
 
         return Stream.of(params)
                 .filter(this::parameterHasDtoObject)
-                .map(this::dtoToMetaData)
+                .map(this::dtoToMetaDataList)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
     }
 
-    private List<ParameterMetaData> dtoToMetaData(Parameter parameter) {
+    private List<ParameterMetaData> dtoToMetaDataList(Parameter parameter) {
 
         return Stream.of(parameter.getType().getDeclaredFields())
                 .filter(this::fieldHasJsonProperty)
-                .map(this::fieldToMetaData)
+                .map(this::fieldToParameterMetaData)
                 .collect(Collectors.toList());
     }
 
-    private ParameterMetaData fieldToMetaData(Field field) {
+    private ParameterMetaData fieldToParameterMetaData(Field field) {
 
         return ParameterMetaData.builder(field).build();
     }
 
-    private ParameterMetaData parameterToMetaData(Parameter parameter) {
+    private ParameterMetaData parameterToParameterMetaData(Parameter parameter) {
 
         return ParameterMetaData.builder(parameter).build();
     }

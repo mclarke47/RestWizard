@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class MethodsParser {
+public class ClassParser {
 
     private Class<?> clazz;
 
-    public MethodsParser(Class<?> clazz) {
+    public ClassParser(Class<?> clazz) {
         this.clazz = clazz;
     }
 

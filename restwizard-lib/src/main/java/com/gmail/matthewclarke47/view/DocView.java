@@ -1,4 +1,4 @@
-package com.gmail.matthewclarke47.formatting;
+package com.gmail.matthewclarke47.view;
 
 import com.gmail.matthewclarke47.metadata.ResourceMetaData;
 import io.dropwizard.views.View;
