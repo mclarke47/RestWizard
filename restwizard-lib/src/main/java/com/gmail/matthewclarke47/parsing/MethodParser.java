@@ -3,6 +3,7 @@ package com.gmail.matthewclarke47.parsing;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.gmail.matthewclarke47.WebServiceAnnotations;
 import com.gmail.matthewclarke47.metadata.ParameterMetaData;
+import com.gmail.matthewclarke47.metadata.ReturnTypeMetadata;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -20,6 +21,10 @@ public class MethodParser {
     public MethodParser(Method method) {
 
         this.method = method;
+    }
+
+    public ReturnTypeMetadata getReturnObject(){
+        return new ReturnTypeMetadata(method.getReturnType().getClass());
     }
 
     public List<ParameterMetaData> getParameterMetaDataList() {

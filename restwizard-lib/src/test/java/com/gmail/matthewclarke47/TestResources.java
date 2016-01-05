@@ -5,11 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 
-public class TestResources {
-
-
-}
-
 class PostObject {
 
     @JsonProperty("thisThing")

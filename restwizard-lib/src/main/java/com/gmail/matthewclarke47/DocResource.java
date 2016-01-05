@@ -16,12 +16,10 @@ public class DocResource {
     private List<ResourceMetaData> list;
 
     public DocResource(List<ResourceMetaData> list) {
-
         this.list = list;
     }
 
     @GET
-    @Path("/docs")
     @Produces(MediaType.TEXT_HTML)
     public Response getPerson() {
         return Response.ok(new DocView("doc.mustache", list)).build();

@@ -1,6 +1,7 @@
 package com.gmail.matthewclarke47.metadata;
 
 import com.gmail.matthewclarke47.WebServiceAnnotations;
+import com.gmail.matthewclarke47.formatting.ClassToJsonFormatter;
 import com.gmail.matthewclarke47.formatting.JsonFormatter;
 import com.gmail.matthewclarke47.parsing.MethodParser;
 
@@ -15,15 +16,17 @@ public class MethodMetaData {
     private List<ParameterMetaData> parameterMetaData;
     private List<QueryParameterMetaData> queryParams;
     private List<PathParameterMetaData> pathParams;
+    private String requestExample;
     private String responseExample;
 
-    public MethodMetaData(String httpMethod, String pathSuffix, List<ParameterMetaData> parameterMetaData) {
+    public MethodMetaData(String httpMethod, String pathSuffix, List<ParameterMetaData> parameterMetaData, Class<?> returnType) {
         this.httpMethod = httpMethod;
         this.pathSuffix = pathSuffix;
         this.parameterMetaData = parameterMetaData;
         this.queryParams = QueryParameterMetaData.castTo(parameterMetaData);
         this.pathParams = PathParameterMetaData.castTo(parameterMetaData);
-        this.responseExample = createResponseExample(parameterMetaData);
+        this.requestExample = createRequestExample(parameterMetaData);
+        this.responseExample = createResponseExample(returnType);
     }
 
     public static MethodMetaDataBuilder builder(Method method) {
@@ -38,13 +41,19 @@ public class MethodMetaData {
         return pathParams;
     }
 
-    public String getResponseExample() {
-        return responseExample;
+    public String getRequestExample() {
+        return requestExample;
     }
 
-    private String createResponseExample(List<ParameterMetaData> parameterMetaDatas) {
+    private String createRequestExample(List<ParameterMetaData> parameterMetaData) {
 
-        return new JsonFormatter(PropertyParameterMetaData.castTo(parameterMetaDatas)).format();
+        return new JsonFormatter(PropertyParameterMetaData.castTo(parameterMetaData)).format();
+
+    }
+
+    private String createResponseExample(Class<?> returnType) {
+
+        return new ClassToJsonFormatter(returnType).format();
 
     }
 
@@ -60,8 +69,17 @@ public class MethodMetaData {
         return parameterMetaData;
     }
 
+    public String getResponseExample() {
+        return responseExample;
+    }
+
+    public void setResponseExample(String responseExample) {
+        this.responseExample = responseExample;
+    }
+
     public static class MethodMetaDataBuilder {
 
+        private final Class<?> returnType;
         private String httpMethod;
         private String pathSuffix;
         private List<ParameterMetaData> parameterMetaData;
@@ -70,6 +88,7 @@ public class MethodMetaData {
             this.pathSuffix = getPathSuffix(method);
             this.httpMethod = getHttpMethod(method);
             this.parameterMetaData = parseParameterMetaData(method);
+            this.returnType = method.getReturnType();
         }
 
         private String getPathSuffix(Method method) {
@@ -96,7 +115,7 @@ public class MethodMetaData {
         }
 
         public MethodMetaData build() {
-            return new MethodMetaData(this.httpMethod, this.pathSuffix, this.parameterMetaData);
+            return new MethodMetaData(this.httpMethod, this.pathSuffix, this.parameterMetaData, this.returnType);
         }
     }
 }
